@@ -1,11 +1,14 @@
 import { Component } from 'react';
 import shortid from 'shortid';
+import PropTypes from 'prop-types';
+import s from '../Form/Form.module.css';
 
 class Form extends Component {
   state = {
     name: '',
     number: '',
   };
+
   nameId = shortid.generate();
   numberId = shortid.generate();
 
@@ -23,8 +26,10 @@ class Form extends Component {
   };
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label htmlFor={this.nameId}>Name</label>
+      <form onSubmit={this.handleSubmit} className={s.form}>
+        <label htmlFor={this.nameId} className={s.label}>
+          Name
+        </label>
         <input
           id={this.nameId}
           type="text"
@@ -34,8 +39,11 @@ class Form extends Component {
           required
           value={this.state.name}
           onChange={this.hadleAddValue}
+          className={s.input}
         />
-        <label htmlFor={this.numberId}>Number</label>
+        <label htmlFor={this.numberId} className={s.label}>
+          Number
+        </label>
         <input
           id={this.numberId}
           type="tel"
@@ -45,11 +53,18 @@ class Form extends Component {
           required
           value={this.state.number}
           onChange={this.hadleAddValue}
+          className={s.input}
         />
-        <button type="submit">Add contact</button>
+        <button type="submit" className={s.button}>
+          Add contact
+        </button>
       </form>
     );
   }
 }
+
+Form.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+};
 
 export default Form;

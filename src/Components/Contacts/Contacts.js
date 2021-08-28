@@ -1,17 +1,29 @@
-export default function Contacts({ contacts }) {
+import s from '../Contacts/Contacts.module.css';
+import PropTypes from 'prop-types';
+
+export default function Contacts({ contacts, onClick }) {
   return (
-    <div>
-      <h2>Contacts:</h2>
-      <ul>
-        {contacts.map(contact => {
-          const { id, name, number } = contact;
-          return (
-            <li key={id}>
-              {name}: {number}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+    <ul className={s.list}>
+      {contacts.map(contact => {
+        const { id, name, number } = contact;
+        return (
+          <li key={id} className={s.item}>
+            {name}: {number}
+            <button
+              type="button"
+              onClick={() => onClick(id)}
+              className={s.button}
+            >
+              Delete
+            </button>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
+
+Contacts.propTypes = {
+  contacts: PropTypes.array.isRequired,
+  onClick: PropTypes.func.isRequired,
+};

@@ -1,7 +1,8 @@
 import { Component } from 'react';
 import shortid from 'shortid';
-import './App.css';
+import s from './App.module.css';
 import Contacts from './Components/Contacts/Contacts';
+import Filter from './Components/Filter/Filter';
 import Form from './Components/Form/Form';
 
 class App extends Component {
@@ -16,22 +17,45 @@ class App extends Component {
   };
 
   addToDataContacts = data => {
+    if (this.state.contacts.find(contact => contact.name === data.name)) {
+      alert(`${data.name} is already created!`);
+      return;
+    }
+
     const newContact = {
       id: shortid.generate(),
       ...data,
     };
-    console.log(newContact);
+    this.setState(({ contacts }) => ({
+      contacts: [...contacts, newContact],
+    }));
+  };
+  deleteContact = contactId => {
     this.setState(prevState => ({
-      contacts: [...prevState.contacts, newContact],
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
   };
 
+  onFilter = e => {
+    this.setState({ filter: e.currentTarget.value });
+  };
+  filteredContacts = () => {
+    const { filter, contacts } = this.state;
+    const normalizeFilter = filter.toLowerCase().trim();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizeFilter),
+    );
+  };
+
   render() {
+    const filteredContacts = this.filteredContacts();
     return (
-      <div className="App">
-        <h1>Phonebook</h1>
+      <div className={s.App}>
+        <h1 className={s.title}>Phonebook</h1>
         <Form onSubmit={this.addToDataContacts} />
-        <Contacts contacts={this.state.contacts} />
+        <h2 className={s.title}>Contacts:</h2>
+        <Filter filter={this.state.filter} onChange={this.onFilter} />
+        <Contacts contacts={filteredContacts} onClick={this.deleteContact} />
       </div>
     );
   }
